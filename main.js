@@ -1,11 +1,13 @@
 var midi, data;
 var heldDownNotes = {};
 var notes = ['a','b_flat','b','c','c_sharp','d','d_sharp','e','f','f_sharp','g', 'g_sharp']
-var bigNotes = "X:1\nM: 4/4\nL: 1/8\nK: Emin\n|:D2|EFB{c}BA B2 EB|\n";
+var abcNotes =       ['c','d','e','f','g','a','b']
+var abcToMidiPitch = [ 0,  2,  4,  5,  7,  9,  11]
+var bigNotes = "X:1\nM: 4/4\nL: 1/8\nK: Emaj\n|:D2|EFB{c}BA B2 EB|\n";
 var tempo = 60;
 var returned = undefined;
 var tune;
-var TREBLE_CLEFF_MIDDLE_C = 0;
+var TREBLE_CLEFF_MIDDLE_C = 60;
 // midi functions
 function onMIDISuccess(midiAccess) {
 	// when we get a succesful response, run this code
@@ -59,7 +61,6 @@ function onMIDIMessage(message) {
 
 	}
 
-
 }
 
 
@@ -96,14 +97,17 @@ function setupEvents(engraver) {
 					} else {
 						// the last note wasn't tied.
 						if (!eventHash["event"+voiceTime])
-							eventHash["event"+voiceTime] = { type: "event", time: voiceTime, pitch: element.abcelem.pitches[0].pitch+currentBaseNote};
+							eventHash["event"+voiceTime] = { type: "event", time: voiceTime, pitch: calculatePitch(element.abcelem.pitches[0].pitch,currentBaseNote)};
 						if (isTiedToNext)
 							isTiedState = true;
 					}
 					voiceTime += element.duration;
 				} else if (element.abcelem.type == "treble") {
-                    alert("C'est un treble");
+                    console.log("C'est un treble");
                     currentBaseNote = TREBLE_CLEFF_MIDDLE_C;
+                } else if ('accidentals' in element.abcelem) {
+                    console.log('we have found an accidental');
+                    handleAccidentals(element.abcelem.accidentals);
                 }
 			}
 			maxVoiceTime = Math.max(maxVoiceTime, voiceTime);
@@ -111,6 +115,23 @@ function setupEvents(engraver) {
 		time = maxVoiceTime;
 	}
 	return sort(eventHash)
+}
+
+function handleAccidentals(accidental) {
+    for (var i = 0; i < accidental.length; i++) {
+        var noteNum = abcNotes.indexOf(accidental[i].note);
+        console.log(accidental[i].note + "" + noteNum);
+        console.log("before" + abcToMidiPitch);
+        abcToMidiPitch[noteNum] = abcToMidiPitch[noteNum]+1;
+        console.log("after" + abcToMidiPitch);
+    }
+    console.log(accidental);
+}
+
+function calculatePitch(abcPitch, baseNote) {
+    var notePitch = abcPitch % 8;
+    var octave = (abcPitch - notePitch) / 8;
+    return baseNote + octave * 12 + abcToMidiPitch[notePitch]; 
 }
 
 function sort(hashedevents) {
