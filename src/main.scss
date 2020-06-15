@@ -1,0 +1,172 @@
+@import "bourbon/bourbon";
+
+$ct-grid-background-fill: white;
+$ct-grid-color: white;
+$ct-text-color: white;
+$ct-text-size: 1rem;
+$ct-bar-width: 50px;
+.ct-chart .ct-series.ct-series-a .ct-bar[ct|meta="c"] {
+    stroke: violet;
+  }
+
+@import 'chartist/dist/scss/chartist.scss';
+
+// Grab some stuff
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,100,200,800,900);
+@import url(https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+
+@mixin animation-delay($delay) {
+  animation-delay:$delay;
+  -webkit-animation-delay:$delay;
+}
+
+body {
+  background:#2C3E50;
+  text-align:center;
+}
+
+
+@keyframes scoreOverlayFromBottom  {
+ 
+  0% {
+    font-size:50px;
+    line-height:200px;
+    top:200px;
+    opacity:0;
+  }
+  
+  15% {
+    opacity:1;
+    font-size:130px;
+    line-height:200px;
+    top:100px;
+    left:-80px;
+  }
+  
+  20% {
+    font-size:100px;    
+  }
+  
+  40% {
+    left:-80px;
+  }
+
+  60% {
+    opacity:1;
+    font-size:100px;
+    line-height:200px;
+    top:100px;    
+    left:10px;
+  }
+  
+  90% {
+    opacity:1;
+    font-size:100px;
+    line-height:200px;
+    top:100px;    
+    left:10px;
+  }
+  
+  100% {
+    opacity:0;
+    font-size:0px;
+    line-height:200px;
+    top:-50px;
+    left:-80px;
+  }
+}
+
+@keyframes scoreOverlayFromBottomMultiplier {
+ 
+  0% {
+    font-size:50px;
+    line-height:200px;
+    top:200px;
+    opacity:0;
+  }
+  
+  30% {
+    opacity:1;
+    font-size:130px;
+    line-height:200px;
+    top:100px;
+  }
+  
+  40% {
+    font-size:100px;
+  }
+  
+  60% {
+    opacity:1;
+    font-size:100px;
+    line-height:200px;
+    top:100px;    
+    left:-200px;    
+  }
+
+  80% {
+    opacity:1;
+    font-size:100px;
+    line-height:200px;
+    top:100px;    
+    left:-200px; 
+  }
+  
+  100% {
+    opacity:0;
+    font-size:0px;
+    line-height:200px;
+    top:-50px;
+    left:-50px;
+  }
+}
+
+@keyframes scoreOverlay {
+ 
+  0% {
+    font-size:50px;
+    line-height:200px;
+    top:0px;
+    opacity:0;
+  }
+  
+  20% {
+    opacity:1;
+    font-size:100px;
+    line-height:200px;
+    top:100px;
+  }
+
+  90% {
+    opacity:1;
+    font-size:100px;
+    line-height:200px;
+    top:100px;    
+  }
+  
+  100% {
+    opacity:0;
+    font-size:0px;
+    line-height:200px;
+    top:-400px;
+  }
+}
+
+.ResetScore {
+  @include position(absolute, 50% 20px auto auto auto);
+  display:block;
+  border-radius:10px;
+  cursor:pointer;
+  width:250px;
+  text-align:center;
+  margin-top:-20px;
+  font:700 14px/40px "Railway", sans-serif;
+  text-transform:uppercase;
+  color:#fff;
+  border:2px solid lighten(#2C3E50, 10%);
+  transition: background .2s;
+  
+  &:hover {
+    background:lighten(#2C3E50, 10%);
+  }
+}
