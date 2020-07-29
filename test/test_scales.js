@@ -41,4 +41,56 @@ describe('main', function() {
         assert.equal(4, main.calculateCoverage(playedNotes));
     });
   });
+
+  describe('#isMajorScale()', function() {
+    it('should return false given less than seven diffs', function() {
+        var diffs = []
+        diffs.push(2)
+        diffs.push(2)
+        assert.equal(false, main.isMajorScale(diffs));
+    });
+  });
+
+  describe('#isMajorScale()', function() {
+    it('should return false given a minor scale', function() {
+        var diffs = []
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(3)
+        diffs.push(1)
+        assert.equal(false, main.isMajorScale(diffs));
+    });
+  });
+
+  describe('#isMajorScale()', function() {
+    it('should return true given a major scale', function() {
+        var diffs = []
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        assert.equal(true, main.isMajorScale(diffs));
+    });
+  });
+
+  describe('#isMajorScale()', function() {
+    it('should return true given a multiple major scales', function() {
+        var diffs = []
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        Array.from(diffs).forEach(function(value) {diffs.push(value)})
+        assert.equal(true, main.isMajorScale(diffs));
+    });
+  });
 });
