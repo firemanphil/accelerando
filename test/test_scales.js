@@ -43,6 +43,13 @@ describe('main', function() {
   });
 
   describe('#isMajorScale()', function() {
+    it('should return false given 0 diffs', function() {
+        var diffs = []
+        assert.equal(false, main.isMajorScale(diffs));
+    });
+  });
+
+  describe('#isMajorScale()', function() {
     it('should return false given less than seven diffs', function() {
         var diffs = []
         diffs.push(2)
@@ -76,6 +83,21 @@ describe('main', function() {
         diffs.push(2)
         diffs.push(1)
         assert.equal(true, main.isMajorScale(diffs));
+    });
+  });
+
+  describe('#isMajorScale()', function() {
+    it('should return false given a major scale plus nonsense', function() {
+        var diffs = []
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(2)
+        diffs.push(1)
+        diffs.push(1)
+        assert.equal(false, main.isMajorScale(diffs));
     });
   });
 

@@ -2,7 +2,7 @@ import './main.scss';
 require("expose-loader?$!jquery");
 import {Chart} from "chart.js" ;
 import {api as MIDIKeys} from "./MidiKeys";
-var scales = import('./scales')
+import * as scales from './scales'
 var chord_movement = import('./chord_movement')
 var mid;
 var heldDownNotes = {};
@@ -16,9 +16,6 @@ var returned = undefined;
 var recording = true;
 var tune;
 var TREBLE_CLEFF_MIDDLE_C = 60;
-var major = [2, 2, 1, 2, 2, 2, 1];
-var majorStr = JSON.stringify(major);
-var majorCompareStr = majorStr.substring(1, majorStr.length - 1);
 var barChart; 
 // midi functions
 function onMIDISuccess(midiAccess) {
@@ -86,7 +83,7 @@ function onMIDIMessage(message) {
             updateChart(playedNotesSorted);
 
             var diffs = generateDiffs(playedNotesSorted);
-            if (isScale(diffs)) {
+            if (scales.isScale(diffs)) {
                 $(".Title").text("Scale found: " + toNoteString(playedNotesSorted[0].note) + " major");
                 scoreScale(playedNotesSorted)
             } else {
@@ -176,31 +173,6 @@ function isTwoHandedScale(notesSorted) {
 
 }
 
-function isScale(diffs) {
-    // this is hard to figure out. When playing with two hands, certain notes are supposed to 
-    // be played together, but that won't be the case due to human imperferctions. Therefore
-    // there is not absolute order to a scale. 
-
-    // What we CAN say is there never should be more than two played notes between two written down notes
-    // on a scale. If the note is x then the next note should be x +1/2 (next note same hand),
-    // x +/- 12 (same note in other hand),
-    // x + 13/14  OR x - 11/10 `(next note in the other hand) 
-
-    // The algorithm will be to scan for a scale in one hand and then assume the rest of the notes are a scale in the other.
-    // TODO for now we focus on one direction (up)
-    if (diffs.length < 7) {
-        return false
-    }
-    console.log(diffs)
-    var generalRulesPass = checkGeneralRulesForScale(diffs)
-    
-    if(generalRulesPass && checkMajor(diffs)) {
-        return true
-    } else {
-        $(".Title").text("Play a scale to see your score!");
-    }
-}
-
 function generateDiffs(playedNotesSorted) {
     var prev = null;
     var diffs = [];
@@ -214,70 +186,11 @@ function generateDiffs(playedNotesSorted) {
     return diffs
 }
 
-function checkGeneralRulesForScale(diffs) {
-    var agreesWithRules = false
-    var i;
-    for (var i = 0; i < diffs.length; i++) {
-        var index = i;
-        var diffIsOk = false
-        // next note in same hand
-        var sameHandNextNote = notesFollowingAlong(diffs, index, 1, 2)
-
-        // next note in other hand
-        var otherHandNextOrSameNote = notesFollowingAlong(diffs, index, 10, 14)
-
-        if (!sameHandNextNote && !otherHandNextOrSameNote) {
-            console.log("was not a scale due to general rules about distances between notes")
-            agreesWithRules = false
-            break
-        }
-        agreesWithRules = true;
-    }
-    return agreesWithRules;
-}
-
-function notesFollowingAlong(diffs, index, lowerBound, upperBound) {
-    var inRange = diffs[index].absBetween(lowerBound, upperBound)
-    if (!inRange) {
-        return false;
-    }
-
-    var enoughNotes = (diffs.length - index) > 4
-    var foundNextNote = false
-    for (var i = 1; i < 4; i++) {
-        var currInd = index + i;
-        if (currInd >= diffs.length){
-            break;
-        }
-        if (diffs[index].absBetween(lowerBound, upperBound)) {
-            foundNextNote = true
-            break
-        }
-
-    }
-    return foundNextNote || !enoughNotes;
-}
-
 Number.prototype.absBetween = function(a, b) {
     var min = Math.min.apply(Math, [a, b]),
       max = Math.max.apply(Math, [a, b]);
     return Math.abs(this) >= min && Math.abs(this) <= max;
 };
-
-function checkMajor(diffs) {
-    console.log(diffs)
-    console.log(major)
-    var diffsString = JSON.stringify(diffs)
-    if (diffsString.includes(majorCompareStr)) {
-        
-        console.log("found major")
-        return true
-    }
-    return false 
-}
-function arrayEquals(array1, array2) {
-    return array1.length === array2.length && array1.every(function(value, index) { return value === array2[index]})
-}
 
 
 function calculatePitch(abcPitch, baseNote) {
