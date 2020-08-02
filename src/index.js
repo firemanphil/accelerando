@@ -83,7 +83,7 @@ function onMIDIMessage(message) {
             updateChart(playedNotesSorted);
 
             var diffs = generateDiffs(playedNotesSorted);
-            if (scales.isScale(diffs)) {
+            if (scales.isScale(playedNotesSorted)) {
                 $(".Title").text("Scale found: " + toNoteString(playedNotesSorted[0].note) + " major");
                 scoreScale(playedNotesSorted)
             } else {

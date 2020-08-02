@@ -1,4 +1,5 @@
 var chords = require('./chord_movement');
+var notes = require('./notes');
 
 var major = [2, 2, 1, 2, 2, 2, 1];
 
@@ -25,7 +26,12 @@ function calculateCoverage(notesSorted) {
     return timeCovered;
 }
 
-function isScale(diffs) {
+function isScale(playedNotes) {
+    var scale = {
+        twoHanded: false,
+        type: "major",
+        startingNote: "C"
+    }
     // this is hard to figure out. When playing with two hands, certain notes are supposed to 
     // be played together, but that won't be the case due to human imperferctions. Therefore
     // there is not absolute order to a scale. 
@@ -37,18 +43,65 @@ function isScale(diffs) {
 
     // The algorithm will be to scan for a scale in one hand and then assume the rest of the notes are a scale in the other.
     // TODO for now we focus on one direction (up)
-    if (diffs.length % 7 != 0) {
+
+    // var generalRulesPass = checkGeneralRulesForScale(diffs)
+    var hands = extractDifferentHands(playedNotes);
+
+    var diffs1 = notes.generateDiffs(hands.handOne);
+    if (diffs1.length % 7 != 0) {
         return false
     }
-    // var generalRulesPass = checkGeneralRulesForScale(diffs)
-    
-    if(isMajorScale(diffs)) {
-        return true;
+    var diffs2 = notes.generateDiffs(hands.handTwo);
+    if (diffs2.length % 7 != 0) {
+        return false
     }
-    return false;
+    if (diffs2.length != 0) {
+        return isMajorScale(diffs1) && isMajorScale(diffs2);
+    } else {
+        return isMajorScale(diffs1);
+    }
+}
+
+function extractDifferentHands(playedNotes) {
+    var hands = {
+        handOne: [],
+        handTwo: [],
+        otherHand: function(hand) {
+            if (hand === this.handOne) {
+                return this.handTwo;
+            } else {
+                return this.handOne;
+            }
+        }
+    }
+    if (playedNotes.length == 0) {
+        return hands;
+    }
+    var previousNote;
+    var currentHand;
+    playedNotes.forEach(element => {
+        if (previousNote === undefined) {
+            hands.handOne.push(element);
+            currentHand = hands.handOne;
+        } else { 
+            if (Math.abs(previousNote.note - element.note) >= 10) {
+                currentHand = hands.otherHand(currentHand);
+                currentHand.push(element);
+            } else {
+                currentHand.push(element);
+            }            
+        }
+        previousNote = element;
+    });
+    return hands;
 }
 
 function isMajorScale(diffs) {       
+    var scale = {
+        twoHanded: false,
+        type: "major",
+        startingNote: undefined
+    }
     if (diffs.length % 7 != 0 || diffs.length == 0) {
         return false;
     }
@@ -59,7 +112,8 @@ function isMajorScale(diffs) {
         diffsSplit.push(diffs.slice(i,i+chunk));
     }
     for (const chunkDiffs of diffsSplit) {
-        if (!chunkDiffs.every(function(value, index) { return value === major[index]})){
+        if (!chunkDiffs.every(function(value, index) { return value === major[index]})
+                && !chunkDiffs.reverse().every(function(value, index) { return value * -1 === major[index]})){
             return false
         }
     }

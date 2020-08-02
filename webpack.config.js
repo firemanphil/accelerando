@@ -7,6 +7,10 @@ const path = require('path');
       path: path.resolve(__dirname, 'dist'),
     },
     mode: 'development',
+    devtool: 'inline-source-map',
+    devServer: {
+      contentBase: './dist',
+    },
     module: {
 	  rules: [
     		{ test: /\.js$/, exclude: /node_modules/, loader: ["babel-loader", 'eslint-loader'] }
