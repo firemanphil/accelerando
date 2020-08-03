@@ -1,3 +1,5 @@
+var notes = ['A','B♭','B','C','C♯','D','D♯','E','F','F♯','G', 'G♯']
+
 function generateDiffs(playedNotesSorted) {
     var prev = null;
     var diffs = [];
@@ -11,4 +13,12 @@ function generateDiffs(playedNotesSorted) {
     return diffs
 }
 
-export { generateDiffs }
+function toNoteString(note){
+	var letterInt = note % 12;
+	return  {
+        octave: (note - letterInt) / 12,
+        letter: notes[letterInt]
+    }
+}
+
+export { generateDiffs, toNoteString }

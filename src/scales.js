@@ -30,7 +30,16 @@ function isScale(playedNotes) {
     var scale = {
         twoHanded: false,
         type: "major",
-        startingNote: "C"
+        startingNote: 0,
+        toString: function() {
+            var noteString = notes.toNoteString(this.startingNote).letter;
+
+            if (this.twoHanded) {
+                return "Two handed "+ noteString + " " + this.type
+            } else {
+                return noteString + " " + this.type
+            }
+        }
     }
     // this is hard to figure out. When playing with two hands, certain notes are supposed to 
     // be played together, but that won't be the case due to human imperferctions. Therefore
@@ -49,17 +58,31 @@ function isScale(playedNotes) {
 
     var diffs1 = notes.generateDiffs(hands.handOne);
     if (diffs1.length % 7 != 0) {
-        return false
+        return undefined
     }
     var diffs2 = notes.generateDiffs(hands.handTwo);
     if (diffs2.length % 7 != 0) {
-        return false
+        return undefined
     }
     if (diffs2.length != 0) {
-        return isMajorScale(diffs1) && isMajorScale(diffs2);
+        var bothHandsMajor = isMajorScale(diffs1) && isMajorScale(diffs2);
+        var bothHandsStartOnTheSameNote = hands.handOne[0].note % 12 == hands.handTwo[0].note % 12;
+        scale.type = "major"
+        scale.startingNote = hands.handOne[0].note;
+        scale.twoHanded = true;
+        if (bothHandsMajor && bothHandsStartOnTheSameNote) {
+            return scale;
+        }
     } else {
-        return isMajorScale(diffs1);
+        var isMajor = isMajorScale(diffs1);
+        scale.type = 'major';
+        scale.startingNote = hands.handOne[0].note;
+        scale.twoHanded = false;
+        if (isMajor) {
+            return scale;
+        }
     }
+    return undefined;
 }
 
 function extractDifferentHands(playedNotes) {
@@ -111,6 +134,7 @@ function isMajorScale(diffs) {
     for (var i=0; i<diffs.length; i+=chunk) {
         diffsSplit.push(diffs.slice(i,i+chunk));
     }
+
     for (const chunkDiffs of diffsSplit) {
         if (!chunkDiffs.every(function(value, index) { return value === major[index]})
                 && !chunkDiffs.reverse().every(function(value, index) { return value * -1 === major[index]})){
