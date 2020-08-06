@@ -82,11 +82,9 @@ function onMIDIMessage(message) {
             });
             updateChart(playedNotesSorted);
 
-            var diffs = generateDiffs(playedNotesSorted);
             var scale = scales.isScale(playedNotesSorted)
             if (scale) {
-                $(".Title").text("Scale found: " + scale.toString());
-                scoreScale(playedNotesSorted)
+                $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score);
             } else {
                 $(".Score").text("");
                 $(".Title").text("Play a scale to see your score!");
@@ -98,11 +96,6 @@ function onMIDIMessage(message) {
 function updateChart(notes) {
     addData(barChart, toNoteString(notes[notes.length-1].note), notes[notes.length-1].length)
     barChart.update();
-}
-
-function avg(values) {
-    let sum = values.reduce((previous, current) => current += previous);
-    return sum / values.length;
 }
 
 function isResetSequence(playedNotesSorted) {
@@ -118,31 +111,6 @@ function isResetSequence(playedNotesSorted) {
         }
     }
     return true
-}
-
-function scoreScale(playedNotesSorted) {
-    // first consider speed
-    var prev = null
-    var timeDiffs = []
-    for (const note of playedNotesSorted) {
-        if (prev !== null) {
-            timeDiffs.push(note.start - prev.start)
-        }
-        prev = note
-    }
-    // this is in millis
-    // 60 bpm = 1 second per beat = 1000ms per beat
-    // bpm = 60 * 1000 / 4 * averageTime (I think) 
-    // 4 because I'm measuring each note as a semiquaver
-    // as per Hanon. Lets say 100/100 = 300bpm (impossible??)
-    // 0/100 = 0bpm
-    // so ... just divide by 3
-    let averageTime = avg(timeDiffs)
-    console.log("time was " + averageTime)
-    var bpm = Math.floor(60000 / (4 *  averageTime))
-    console.log("bpm was " + bpm)
-    $(".Score").text("SCORE WAS " + bpm/3).show()
-    
 }
 
 function isTwoHandedScale(notesSorted) {

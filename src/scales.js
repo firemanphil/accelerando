@@ -1,7 +1,24 @@
+import { sum } from 'chartist';
+
 var chords = require('./chord_movement');
 var notes = require('./notes');
 
-var major = [2, 2, 1, 2, 2, 2, 1];
+const major = [2, 2, 1, 2, 2, 2, 1];
+const scoreRange = [{
+    1: [50, 100]
+},{
+    2: [25, 50]
+}, {
+    5: [10, 25]
+}, {
+    10: [5, 10]
+}, {
+    20: [2, 5]
+}, {
+    50: [1, 2]
+}, {
+    100: [0, 1]
+}];
 
 function calculateCoverage(notesSorted) {
     var i
@@ -26,11 +43,18 @@ function calculateCoverage(notesSorted) {
     return timeCovered;
 }
 
+function avg(values) {
+    let sum = values.reduce((previous, current) => current += previous);
+    return sum / values.length;
+}
+
+
 function isScale(playedNotes) {
     var scale = {
         twoHanded: false,
         type: "major",
         startingNote: 0,
+        score: 0,
         toString: function() {
             var noteString = notes.toNoteString(this.startingNote).letter;
 
@@ -64,6 +88,7 @@ function isScale(playedNotes) {
     if (diffs2.length % 7 != 0) {
         return undefined
     }
+    scale.score = scoreScale(hands.handOne);
     if (diffs2.length != 0) {
         var bothHandsMajor = isMajorScale(diffs1) && isMajorScale(diffs2);
         var bothHandsStartOnTheSameNote = hands.handOne[0].note % 12 == hands.handTwo[0].note % 12;
@@ -117,6 +142,52 @@ function extractDifferentHands(playedNotes) {
         previousNote = element;
     });
     return hands;
+}
+
+function scoreScale(handOne, handTwo) {
+    if (handOne.length < 2 || (handTwo && handOne.length != handTwo.length)) {
+        return 0;
+    }
+    // first consider speed
+    var prev = null
+    var noteLengths = []
+    handOne.forEach(element => {
+        
+    });
+    for (const note of handOne) {
+        // we don't consider the last note because that tends to be longer
+        if (prev !== null) {
+            noteLengths.push(note.start - prev.start)
+        }
+        prev = note
+    }
+    // this is in millis
+    // 60 bpm = 1 second per beat = 1000ms per beat
+    // bpm = 60 * 1000 / 4 * averageTime (I think) 
+    // 4 because I'm measuring each note as a semiquaver
+    // as per Hanon. Lets say 100/100 = 300bpm (impossible??)
+    // 0/100 = 0bpm
+    // so ... just divide by 3
+    let averageTime = avg(noteLengths)
+
+    var percDiffsFromAvg = noteLengths.map(element => {
+        return 100 * (Math.abs(averageTime - element)/ averageTime);
+    });
+    console.log(percDiffsFromAvg);
+    var scorePerNote = percDiffsFromAvg.map(element =>  {
+        return Object.keys(scoreRange.filter(function(el) {
+            var key = el[Object.keys(el)];
+            return element > key[0] && element <= key[1]
+          })[0]|| {0: []});
+    });
+    console.log(scorePerNote);
+
+    console.log("time was " + averageTime)
+    var bpm = Math.floor(60000 / (4 *  averageTime))
+    console.log("bpm was " + bpm);
+    return parseInt(bpm * scorePerNote.reduce(function(a, b){
+        return a + b;
+    }, 0));
 }
 
 function isMajorScale(diffs) {       
