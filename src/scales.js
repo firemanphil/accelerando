@@ -4,7 +4,10 @@ var chords = require('./chord_movement');
 var notes = require('./notes');
 
 const major = [2, 2, 1, 2, 2, 2, 1];
-const scoreRange = [{
+const scoreRange = [
+{
+    0: [100, Number.MAX_VALUE]
+}, {
     1: [50, 100]
 },{
     2: [25, 50]
@@ -54,7 +57,11 @@ function isScale(playedNotes) {
         twoHanded: false,
         type: "major",
         startingNote: 0,
-        score: 0,
+        score: {
+          total: 0,
+          accuracy: 0,
+          speed: 0
+        },
         toString: function() {
             var noteString = notes.toNoteString(this.startingNote).letter;
 
@@ -178,16 +185,21 @@ function scoreScale(handOne, handTwo) {
         return Object.keys(scoreRange.filter(function(el) {
             var key = el[Object.keys(el)];
             return element > key[0] && element <= key[1]
-          })[0]|| {0: []});
+          })[0])[0]|| {0: []};
     });
     console.log(scorePerNote);
 
     console.log("time was " + averageTime)
     var bpm = Math.floor(60000 / (4 *  averageTime))
     console.log("bpm was " + bpm);
-    return parseInt(bpm * scorePerNote.reduce(function(a, b){
-        return a + b;
-    }, 0));
+    var accuracy = scorePerNote.reduce(function(a, b){
+      return parseInt(a) + parseInt(b);
+    }, 0);
+    return {
+      total: bpm * accuracy,
+      speed: bpm,
+      accuracy: accuracy
+    }
 }
 
 function isMajorScale(diffs) {       

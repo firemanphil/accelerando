@@ -84,7 +84,7 @@ function onMIDIMessage(message) {
 
             var scale = scales.isScale(playedNotesSorted)
             if (scale) {
-                $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score);
+                $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
             } else {
                 $(".Score").text("");
                 $(".Title").text("Play a scale to see your score!");
@@ -198,8 +198,9 @@ function removeData(chart) {
 
 document.addEventListener("DOMContentLoaded",function(){
 
-    MIDIKeys.onmessage = onMIDIMessage;
-	// tune = ABCJS.renderAbc("notation", bigNotes, {},{add_classes: true})[0];
+    // MIDIKeys.onmessage = onMIDIMessage;
+  
+  // tune = ABCJS.renderAbc("notation", bigNotes, {},{add_classes: true})[0];
 	// returned = ABCJS.startAnimation($('#notation')[0], tune, { showCursor: true, bpm:tempo} );
 	// request MIDI access
 	if (navigator.requestMIDIAccess) {
