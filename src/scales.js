@@ -20,7 +20,7 @@ const scoreRange = [
 }, {
     50: [1, 2]
 }, {
-    100: [0, 1]
+    100: [-1, 1]
 }];
 
 function calculateCoverage(notesSorted) {
@@ -152,15 +152,14 @@ function extractDifferentHands(playedNotes) {
 }
 
 function scoreScale(handOne, handTwo) {
-    if (handOne.length < 2 || (handTwo && handOne.length != handTwo.length)) {
-        return 0;
+
+    if (!handOne || handOne.length < 8 || (handTwo && handOne.length != handTwo.length)) {
+        return;
     }
     // first consider speed
     var prev = null
     var noteLengths = []
-    handOne.forEach(element => {
-        
-    });
+
     for (const note of handOne) {
         // we don't consider the last note because that tends to be longer
         if (prev !== null) {

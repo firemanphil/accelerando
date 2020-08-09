@@ -2,6 +2,18 @@ var assert = require('assert');
 var rewire = require('rewire')
 var main = rewire("../src/scales");
 var extractDifferentHands =  main.__get__('extractDifferentHands');
+var scoreScale =  main.__get__('scoreScale');
+var major = main.__get__('major');
+
+function generateScale() {
+  return [...Array(16).keys()].map(value => { 
+    return {
+        start: value % 8,
+        end: value % 8 + 1,
+        note: value
+    };
+  });
+}
 
 describe('main', function() {
   var notes = []
@@ -192,6 +204,58 @@ describe('main', function() {
         assert.equal(2, extractDifferentHands(playedNotes).handTwo.length);
         assert.deepEqual([played1, played2], extractDifferentHands(playedNotes).handOne);
         assert.deepEqual([played3, played4], extractDifferentHands(playedNotes).handTwo);
+        
+    });
+  });
+
+  describe('#scoreScale()', function() {
+    it('should return nothing when sent nothing', function() {
+        var playedNotes = [];
+        assert.equal(undefined, scoreScale());
+    });
+  });
+  
+  describe('#scoreScale()', function() {
+    it('should return nothing when sent less than eight notes', function() {
+        var playedNotes = [];
+        playedNotes.push(played1);
+        playedNotes.push(played3);
+        playedNotes.push(played4);
+        playedNotes.push(played2);
+        assert.equal(scoreScale(playedNotes), undefined);
+        
+    });
+  });
+
+  describe('#scoreScale()', function() {
+    it('should return nothing when sent more than eight notes in the first hand, but less in the second', function() {
+        var playedNotes = [];
+        playedNotes.push(played1);
+        assert.equal(scoreScale(generateScale(), playedNotes), undefined);
+        
+    });
+  });
+
+  describe('#scoreScale()', function() {
+    it('should return score when sent 8 notes in each hand', function() {
+        var scaleOfNotes = generateScale();
+        var handOne = scaleOfNotes.slice(0, 8)
+        var handTwo = scaleOfNotes.slice(8)  
+      
+        assert.notEqual(scoreScale(handOne, handTwo), undefined);
+        
+    });
+  });
+
+  describe('#scoreScale()', function() {
+    it('should return a better score when more accurate', function() {
+        var scaleOfNotes = generateScale();
+        var handOne = scaleOfNotes.slice(0, 8);
+        var handTwo = scaleOfNotes.slice(8); 
+        var score1 = scoreScale(handOne, handTwo);
+        handOne[7].start = 70;
+        var score2 = scoreScale(handOne, handTwo);
+        assert(score1.total > score2.total);
         
     });
   });
