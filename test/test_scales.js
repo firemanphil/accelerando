@@ -259,5 +259,18 @@ describe('main', function() {
         
     });
   });
+
+  describe('#scoreScale()', function() {
+    it('should return a better score when quicker', function() {
+        var scaleOfNotes = generateScale();
+        var handOne = scaleOfNotes.slice(0, 8);
+        var handTwo = scaleOfNotes.slice(8); 
+        var score1 = scoreScale(handOne, handTwo);
+        handOne.forEach(el => el.start *= 2);
+        var score2 = scoreScale(handOne, handTwo);
+        assert(score1.total > score2.total);
+        
+    });
+  });
   
 });
