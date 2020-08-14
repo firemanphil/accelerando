@@ -1,5 +1,3 @@
-import { sum } from 'chartist';
-
 var chords = require('./chord_movement');
 var notes = require('./notes');
 

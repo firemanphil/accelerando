@@ -3,6 +3,7 @@ require("expose-loader?$!jquery");
 import {Chart} from "chart.js" ;
 import {api as MIDIKeys} from "./MidiKeys";
 import * as scales from './scales'
+import * as storage from './storage'
 var chord_movement = import('./chord_movement')
 var mid;
 var heldDownNotes = {};
@@ -85,6 +86,7 @@ function onMIDIMessage(message) {
             var scale = scales.isScale(playedNotesSorted)
             if (scale) {
                 $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
+                storage.storeScale(scale);
             } else {
                 $(".Score").text("");
                 $(".Title").text("Play a scale to see your score!");
@@ -197,8 +199,7 @@ function removeData(chart) {
 
 
 document.addEventListener("DOMContentLoaded",function(){
-
-    // MIDIKeys.onmessage = onMIDIMessage;
+    MIDIKeys.onmessage = onMIDIMessage;
   
   // tune = ABCJS.renderAbc("notation", bigNotes, {},{add_classes: true})[0];
 	// returned = ABCJS.startAnimation($('#notation')[0], tune, { showCursor: true, bpm:tempo} );
@@ -222,7 +223,14 @@ document.addEventListener("DOMContentLoaded",function(){
       
     });
     var ctx = document.getElementById('myChart');
-
+    new Chartist.Pie('.ct-chart', {
+        series: [20, 10, 30, 40]
+      }, {
+        donut: true,
+        donutWidth: 20,
+        startAngle: 270,
+        total: 200
+      });
     barChart = new Chart(ctx, {
         type: 'bar',
         data: {
