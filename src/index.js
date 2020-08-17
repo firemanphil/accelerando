@@ -63,7 +63,7 @@ function onMIDIMessage(message) {
             var timeDown = message.timeStamp - heldDownNotes[note].start;
             heldDownNotes[note].end = message.timeStamp 
             heldDownNotes[note].length = timeDown
-			heldDownNotes[note] = undefined
+			      heldDownNotes[note] = undefined
             // is it a good assumption that the notes are in time order?
             // what does time order mean? I guess that the start of note 1 is before the start of note 2
 
@@ -81,18 +81,23 @@ function onMIDIMessage(message) {
             var playedNotesSorted = playedNotes.sort(function(a, b) {
                 return a.start - b.start
             });
-            updateChart(playedNotesSorted);
 
             var scale = scales.isScale(playedNotesSorted)
             if (scale) {
-                $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
-                storage.storeScale(scale);
+                onScale(scale);
+                
             } else {
                 $(".Score").text("");
                 $(".Title").text("Play a scale to see your score!");
             }
         }
 	}
+}
+
+function onScale(scale) {
+    $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
+    storage.storeScale(scale);
+    storage.getScalesMatching(scale);
 }
 
 function updateChart(notes) {
@@ -223,52 +228,36 @@ document.addEventListener("DOMContentLoaded",function(){
       
     });
     var ctx = document.getElementById('myChart');
-    new Chartist.Pie('.ct-chart', {
-        series: [20, 10, 30, 40]
-      }, {
-        donut: true,
-        donutWidth: 20,
-        startAngle: 270,
-        total: 200
-      });
-    barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'length held down',
-                data: [],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-    console.log(barChart);
-    console.log(barChart.data);
-    
+    ctx.width = window.innerWidth /2 ;
+    ctx.height = window.innerHeight /2;
+    Chart.defaults.global.defaultColor = "rgba(1,1,1 , 1)"
+    var data = {
+      labels: ['Current', 'Best'],
+      barPercentage: 0.5,
+      barThickness: 6,
+      maxBarThickness: 8,
+      minBarLength: 2,
+			datasets: [{
+				data: [
+          10,
+          3
+				]
+			}]
 
-});
+		};
+    barChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: data,
+      options: {
+        // Elements options apply to all of the options unless overridden in a dataset
+        // In this case, we are setting the border of each horizontal bar to be 2px wide
+        elements: {
+          rectangle: {
+            borderWidth: 2,
+          }
+        },
+        responsive: true,
+      }
+    });
+
+  });

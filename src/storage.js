@@ -10,4 +10,18 @@ function storeScale(scale) {
     }
 }
 
-export {storeScale};
+function getBestScaleMatching(scale) {
+  var scalesString = window.localStorage.getItem("scales");
+  if (scalesString){
+    var scales = JSON.parse(scalesString);
+    var matchingScales = scales.filter(curre => {
+      return curre.startingNote == scale.startingNote && curre.twoHanded == scale.twoHanded && curre.type == scale.type
+    });
+    if (matchingScales.length > 0){
+      return 
+    }
+
+  }
+}
+
+export {storeScale, getBestScaleMatching};
