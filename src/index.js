@@ -97,7 +97,11 @@ function onMIDIMessage(message) {
 function onScale(scale) {
     $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
     storage.storeScale(scale);
-    storage.getScalesMatching(scale);
+    var best = storage.getBestScaleMatching(scale);
+    barChart.data.datasets[0].data[0] = scale.score.total
+    barChart.data.datasets[0].data[1] = best.score.total
+    barChart.update();
+
 }
 
 function updateChart(notes) {

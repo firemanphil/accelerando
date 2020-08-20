@@ -18,7 +18,13 @@ function getBestScaleMatching(scale) {
       return curre.startingNote == scale.startingNote && curre.twoHanded == scale.twoHanded && curre.type == scale.type
     });
     if (matchingScales.length > 0){
-      return 
+      return matchingScales.reduce((prev, curr) => {
+        if (prev.score.total > curr.score.total) {
+          return prev;
+        } else {
+          return curr;
+        }
+      })
     }
 
   }
