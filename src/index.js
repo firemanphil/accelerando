@@ -4,6 +4,7 @@ import {Chart} from "chart.js" ;
 import {api as MIDIKeys} from "./MidiKeys";
 import * as scales from './scales'
 import * as storage from './storage'
+import * as behaviour from './behaviour'
 var chord_movement = import('./chord_movement')
 var mid;
 var heldDownNotes = {};
@@ -208,6 +209,7 @@ function removeData(chart) {
 
 
 document.addEventListener("DOMContentLoaded",function(){
+    behaviour.addBehaviour();
     MIDIKeys.onmessage = onMIDIMessage;
   
   // tune = ABCJS.renderAbc("notation", bigNotes, {},{add_classes: true})[0];

@@ -9,17 +9,19 @@
     "chart.js": "^2.9.3",
     "chartist": "^0.11.4",
     "expose-loader": "^0.7.5",
-    "jquery": "^3.5.1",
-    "mocha": "^7.2.0"
+    "jquery": "^3.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
     "@babel/register": "^7.10.5",
     "babel-loader": "^8.1.0",
+    "browserify": "^16.5.2",
+    "chai": "^4.2.0",
     "css-loader": "^3.6.0",
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.2",
+    "mocha": "^7.2.0",
     "nodemon": "^2.0.4",
     "rewire": "^5.0.0",
     "sass": "^1.26.10",
