@@ -4,10 +4,35 @@
 
     </head>
     <body>
+      <div class="box">
+        <div class="top">
+          <div id="buttons">
+            <label class="button" id="btnMidi">
+              <span class="text">Use MIDI connection</span>
+            
+            </label>
+            <span>or</span>
+            <button class="button" id="btnRecord">
+              <span class="text">Use microphone</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="middle">
+          <div id="help">
+            <h1>Accelerando</h1>
+            <p>This app helps you practise your scales by giving you a score each time you attempt one!</p>
+            <p>It allows saves your attempts so you can track your progression towards mastering your scales.</p>
+            <p>If you have a MIDI connection on your piano, we recommend that you use this. This allows your score to be much more accurate. </p>
+          </div>
+        </div>
+        <div class="bottom">Play a scale to see your score!</div>
+        
+      </div>
+    <div class="chart-container" style="position: relative; height:60vh; width:90vw" hidden>
+        <canvas id="myChart" hidden></canvas>
 	    <script src="main.js"></script>
-    <div class="Title">Play a scale to see your score!</div>
-    <div class="chart-container" style="position: relative; height:60vh; width:90vw">
-      <canvas id="myChart"></canvas>
+     
     </div>
         
 </html>

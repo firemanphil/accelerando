@@ -9,164 +9,84 @@ $ct-bar-width: 50px;
     stroke: violet;
   }
 
-@import 'chartist/dist/scss/chartist.scss';
-
 // Grab some stuff
-@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700,100,200,800,900);
-@import url(https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css?family=Poppins);
 
-@mixin animation-delay($delay) {
-  animation-delay:$delay;
-  -webkit-animation-delay:$delay;
-}
 
 body {
-  background:#2C3E50;
+  background:#000000;
   text-align:center;
+  font-family: "Poppins", "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2em;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.box {
+  background: #262626;
+  border-radius: 10px;
+  margin: 40px auto;
+}
+
+.top {
+  padding: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+}
+
+.middle {
+  padding: 16px;
+  font-size: 16px;
+  background: #333333;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.button {
+  -webkit-appearance: none;
+  display: inline-block;
+  margin: 14px;
+  padding: 6px 14px;
+  background: 0;
+  border: 0;
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: white;
+  background: #29c403;
+	border-radius: 100px;
+  width: 250px;
+}
+
+p {
+  padding: 0 24px;
+  text-align: left;
+}
+
+h1 {
+  text-transform: uppercase;
+  text-align: center;
 }
 
 
-@keyframes scoreOverlayFromBottom  {
- 
-  0% {
-    font-size:50px;
-    line-height:200px;
-    top:200px;
-    opacity:0;
-  }
-  
-  15% {
-    opacity:1;
-    font-size:130px;
-    line-height:200px;
-    top:100px;
-    left:-80px;
-  }
-  
-  20% {
-    font-size:100px;    
-  }
-  
-  40% {
-    left:-80px;
-  }
-
-  60% {
-    opacity:1;
-    font-size:100px;
-    line-height:200px;
-    top:100px;    
-    left:10px;
-  }
-  
-  90% {
-    opacity:1;
-    font-size:100px;
-    line-height:200px;
-    top:100px;    
-    left:10px;
-  }
-  
-  100% {
-    opacity:0;
-    font-size:0px;
-    line-height:200px;
-    top:-50px;
-    left:-80px;
-  }
+.bottom {
+  padding: 4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
 }
 
-@keyframes scoreOverlayFromBottomMultiplier {
- 
-  0% {
-    font-size:50px;
-    line-height:200px;
-    top:200px;
-    opacity:0;
-  }
-  
-  30% {
-    opacity:1;
-    font-size:130px;
-    line-height:200px;
-    top:100px;
-  }
-  
-  40% {
-    font-size:100px;
-  }
-  
-  60% {
-    opacity:1;
-    font-size:100px;
-    line-height:200px;
-    top:100px;    
-    left:-200px;    
-  }
-
-  80% {
-    opacity:1;
-    font-size:100px;
-    line-height:200px;
-    top:100px;    
-    left:-200px; 
-  }
-  
-  100% {
-    opacity:0;
-    font-size:0px;
-    line-height:200px;
-    top:-50px;
-    left:-50px;
-  }
-}
-
-@keyframes scoreOverlay {
- 
-  0% {
-    font-size:50px;
-    line-height:200px;
-    top:0px;
-    opacity:0;
-  }
-  
-  20% {
-    opacity:1;
-    font-size:100px;
-    line-height:200px;
-    top:100px;
-  }
-
-  90% {
-    opacity:1;
-    font-size:100px;
-    line-height:200px;
-    top:100px;    
-  }
-  
-  100% {
-    opacity:0;
-    font-size:0px;
-    line-height:200px;
-    top:-400px;
-  }
-}
-
-.ResetScore {
-  @include position(absolute, 50% 20px auto auto auto);
-  display:block;
-  border-radius:10px;
-  cursor:pointer;
-  width:250px;
-  text-align:center;
-  margin-top:-20px;
-  font:700 14px/40px "Railway", sans-serif;
-  text-transform:uppercase;
-  color:#fff;
-  border:2px solid lighten(#2C3E50, 10%);
-  transition: background .2s;
-  
-  &:hover {
-    background:lighten(#2C3E50, 10%);
-  }
-}
