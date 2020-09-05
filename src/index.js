@@ -234,18 +234,21 @@ document.addEventListener("DOMContentLoaded",function(){
     var ctx = document.getElementById('myChart');
     ctx.width = window.innerWidth /2 ;
     ctx.height = window.innerHeight /2;
-    Chart.defaults.global.defaultColor = "rgba(1,1,1 , 1)"
+    console.log(Chart.defaults.global.defaultColor);
+    Chart.defaults.global.defaultColor = "rgba(255,255,255,1)"
+    console.log(Chart.defaults.global.defaultColor);
+
     var data = {
       labels: ['Current', 'Best'],
-      barPercentage: 0.5,
-      barThickness: 6,
-      maxBarThickness: 8,
-      minBarLength: 2,
 			datasets: [{
 				data: [
           10,
           3
-				]
+        ],
+        backgroundColor: [
+          "rgba(255,0,0,1)",
+          "rgba(0,0,255,1)"
+        ]
 			}]
 
 		};
@@ -255,11 +258,13 @@ document.addEventListener("DOMContentLoaded",function(){
       options: {
         // Elements options apply to all of the options unless overridden in a dataset
         // In this case, we are setting the border of each horizontal bar to be 2px wide
-        elements: {
-          rectangle: {
-            borderWidth: 2,
-          }
-        },
+        scales: {
+          xAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+      },
         responsive: true,
       }
     });
