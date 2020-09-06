@@ -1,8 +1,13 @@
 function addBehaviour() {
-    let button = document.querySelector("#btnMidi");
-    button.addEventListener("click", () => {
-      console.log("Button clicked.");
+    let midiButton = document.querySelector("#btnMidi");
+    midiButton.addEventListener("click", () => {
+      onMidiButtonClick(midiButton);
     });
+}
+
+function onMidiButtonClick(midiButton) {
+  console.log("we are here")
+  midiButton.disabled = true;
 }
 
 export {addBehaviour}

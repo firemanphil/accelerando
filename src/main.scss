@@ -70,6 +70,11 @@ body {
   width: 250px;
 }
 
+.button[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 p {
   padding: 0 24px;
   text-align: left;
