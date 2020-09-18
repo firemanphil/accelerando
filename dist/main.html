@@ -19,11 +19,26 @@
         </div>
         
         <div class="middle">
+          <div id="midiBrowserProblem" hidden>
+            <h2>Browser not supported</h2>
+            <p>This browser cannot access MIDI devices connected to the computer.</p>
+            <p>Please use Chrome, Edge or Opera. Or, consider using the microphone instead.</p>
+          </div>
+          <div id="midiNotConnectedProblem" hidden>
+            <h2>MIDI device not connected</h2>
+            <p>The app can't find any MIDI devices connected to this computer.</p>
+            <p>Please connect one via an input port. More information on this is available here.</p>
+          </div>
           <div id="help">
             <h1>Accelerando</h1>
             <p>This app helps you practise your scales by giving you a score each time you attempt one!</p>
             <p>It allows saves your attempts so you can track your progression towards mastering your scales.</p>
             <p>If you have a MIDI connection on your piano, we recommend that you use this. This allows your score to be much more accurate. </p>
+          </div>
+          <div class="chart-container" style="position: relative; height:60vh; width:90vw" hidden>
+            <canvas id="myChart" hidden></canvas>
+          <script src="main.js"></script>
+         
           </div>
         </div>
         <div class="bottom">Play a scale to see your score!</div>
