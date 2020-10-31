@@ -51,6 +51,9 @@ function avg(values) {
 
 
 function isScale(playedNotes) {
+
+    var date = new Date();
+    
     var scale = {
         twoHanded: false,
         type: "major",
@@ -60,6 +63,7 @@ function isScale(playedNotes) {
           accuracy: 0,
           speed: 0
         },
+        timestamp: date.getTime(),
         toString: function() {
             var noteString = notes.toNoteString(this.startingNote).letter;
 
@@ -200,11 +204,6 @@ function scoreScale(handOne, handTwo) {
 }
 
 function isMajorScale(diffs) {       
-    var scale = {
-        twoHanded: false,
-        type: "major",
-        startingNote: undefined
-    }
     if (diffs.length % 7 != 0 || diffs.length == 0) {
         return false;
     }

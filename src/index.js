@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded",function(){
       el.before( el.clone(true) ).remove();
       
     });
-    var ctx = document.getElementById('myChart');
+    var ctx = document.getElementById('highLevelScores');
     ctx.width = window.innerWidth /2 ;
     ctx.height = window.innerHeight /2;
     console.log(Chart.defaults.global.defaultColor);
