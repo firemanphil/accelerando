@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 function storeScale(scale) {
     var scalesString = window.localStorage.getItem("scales");
     
@@ -30,4 +32,19 @@ function getBestScaleMatching(scale) {
   }
 }
 
-export {storeScale, getBestScaleMatching};
+function storeMidiData(midiMessages) {
+  var file = new Blob([JSON.stringify(midiMessages)], {type: 'application/json'});
+  var a = document.createElement("a"),
+                url = URL.createObjectURL(file);
+  a.href = url;
+  a.download = uuidv4()+ '.json';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);  
+  }, 0); 
+
+}
+
+export {storeScale, getBestScaleMatching, storeMidiData};

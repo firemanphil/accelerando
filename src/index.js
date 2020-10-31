@@ -16,6 +16,7 @@ var bigNotes = "X:1\nM: 4/4\nL: 1/8\nK: Emaj\n|:D2|EFB{c}BA B2 EB|\n";
 var tempo = 60;
 var returned = undefined;
 var recording = true;
+var recordedMidi = [];
 var tune;
 var TREBLE_CLEFF_MIDDLE_C = 60;
 var barChart; 
@@ -44,6 +45,9 @@ function toNoteString(note){
 }
 
 function onMIDIMessage(message) {
+    if (recording) {
+        recordedMidi.push(message);
+    }
 	var data = message.data; // this gives us our [command/channel, note, velocity] data.
 	// MIDI data [144, 63, 73]
 	// 60 is middle c (c_3)
@@ -102,7 +106,10 @@ function onScale(scale) {
     barChart.data.datasets[0].data[0] = scale.score.total
     barChart.data.datasets[0].data[1] = best.score.total
     barChart.update();
-
+    if (recording) {
+        storage.storeMidiData(recordedMidi);
+        recordedMidi = [];
+    }
 }
 
 function updateChart(notes) {
