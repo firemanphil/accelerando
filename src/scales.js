@@ -1,6 +1,8 @@
 var chords = require('./chord_movement');
 var notes = require('./notes');
 
+let recording = true;
+
 const major = [2, 2, 1, 2, 2, 2, 1];
 const scoreRange = [
 {
@@ -20,6 +22,12 @@ const scoreRange = [
 }, {
     100: [-1, 1]
 }];
+
+var scaleListeners = [];
+
+function registerScaleListener(scaleListener) {
+  scaleListeners.push(scaleListener);
+}
 
 function calculateCoverage(notesSorted) {
     var i
@@ -49,8 +57,7 @@ function avg(values) {
     return sum / values.length;
 }
 
-
-function isScale(playedNotes) {
+function isScale(_, playedNotes) {
 
     var date = new Date();
     
@@ -105,7 +112,8 @@ function isScale(playedNotes) {
         scale.startingNote = hands.handOne[0].note;
         scale.twoHanded = true;
         if (bothHandsMajor && bothHandsStartOnTheSameNote) {
-            return scale;
+          scaleListeners.forEach(l => l(scale))  
+          return scale;
         }
     } else {
         var isMajor = isMajorScale(diffs1);
@@ -113,6 +121,7 @@ function isScale(playedNotes) {
         scale.startingNote = hands.handOne[0].note;
         scale.twoHanded = false;
         if (isMajor) {
+            scaleListeners.forEach(l => l(scale))
             return scale;
         }
     }
@@ -229,5 +238,6 @@ Number.prototype.absBetween = function(a, b) {
     return Math.abs(this) >= min && Math.abs(this) <= max;
 };
 
+notes.registerNoteListener(isScale);
 
-export { calculateCoverage, isMajorScale, isScale };
+export { calculateCoverage, isMajorScale, isScale, registerScaleListener };

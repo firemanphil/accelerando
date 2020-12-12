@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
+var scales = require("./scales")
+ 
 function storeScale(scale) {
     var scalesString = window.localStorage.getItem("scales");
     
@@ -47,4 +49,6 @@ function storeMidiData(midiMessages) {
 
 }
 
-export {storeScale, getBestScaleMatching, storeMidiData};
+scales.registerScaleListener(storeScale);
+
+export { getBestScaleMatching, storeMidiData};

@@ -1,3 +1,6 @@
+var storage = require("./storage")
+var scales = require("./scales")
+
 function addBehaviour() {
     let midiButton = document.querySelector("#btnMidi");
     midiButton.addEventListener("click", () => {
@@ -11,7 +14,7 @@ function onMidiButtonClick(midiButton) {
   if (navigator.requestMIDIAccess) {
     navigator.requestMIDIAccess({
 			sysex: false
-		}).then(onMIDISuccess, onMIDIFailure);
+		}).then(onMIDISuccess, showMidiNotConnectedSection);
   } else {
     showMidiProblemDiv()
   }
@@ -36,19 +39,11 @@ function onMIDISuccess(midiAccess) {
 	// when we get a succesful response, run this code
 	var midi = midiAccess; // this is our raw MIDI data, inputs, outputs, and sysex status
   var inputs = midi.inputs.values();
-  if (midi.inputs.size == 0) {
+  let softwareMidiEnabled = new URLSearchParams(location.search).get("softwareMidi") !== null;
+  if (midi.inputs.size == 1 || softwareMidiEnabled) {
     showChartDiv()
     // showMidiNotConnectedSection();
   } else {
-
-  }
-}
-
-function onMIDIFailure() {
-	// when we get a succesful response, run this code
-	var midi = midiAccess; // this is our raw MIDI data, inputs, outputs, and sysex status
-  var inputs = midi.inputs.values();
-  if (inputs.length == 0) {
     showMidiNotConnectedSection();
   }
 }
@@ -59,5 +54,14 @@ function showMidiNotConnectedSection() {
   browserProblemSection.hidden = false;
   helpSection.hidden = true;
 }
+
+
+function onScale(scale) {
+  $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
+  var best = storage.getBestScaleMatching(scale);
+  
+}
+
+scales.registerScaleListener(onScale);
 
 export {addBehaviour}

@@ -38,6 +38,9 @@ map[191] = 76; // / E5
 var flags = {};
 
 function sendMessage(e, command) {
+    if (api.onmessage === null) {
+      return;
+    }
     // Check the event key against the midi map.
     var note = map[(typeof e.which === "number") ? e.which : e.keyCode];
 
