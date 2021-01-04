@@ -57,7 +57,8 @@ function showMidiNotConnectedSection() {
 
 
 function onScale(scale) {
-  $(".Title").text("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
+
+  console.log("Scale found: " + scale.toString()+ ", score was " + scale.score.total + " (accuracy " + scale.score.accuracy + ", speed " + scale.score.speed + ")");
   var best = storage.getBestScaleMatching(scale);
   
 }
