@@ -6,7 +6,7 @@
   "dependencies": {
     "bourbon": "^6.0.0",
     "chart": "^0.1.2",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "chartist": "^0.11.4",
     "expose-loader": "^0.7.5",
     "jquery": "^3.5.1",
