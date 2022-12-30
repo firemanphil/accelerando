@@ -22,7 +22,7 @@
     "css-loader": "^3.6.0",
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.2",
-    "mocha": "^7.2.0",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.4",
     "rewire": "^5.0.0",
     "sass": "^1.26.10",
